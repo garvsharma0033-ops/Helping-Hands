@@ -1,0 +1,10 @@
+{
+  "name": "Helping Hands",
+  "description": "An all-in-one AI-powered construction ecosystem connecting builders, suppliers, contractors, workers, and real estate into one powerful unified platform.",
+  "requestFramePermissions": [
+    "geolocation",
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": []
+}

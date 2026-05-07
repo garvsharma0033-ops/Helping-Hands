@@ -1,0 +1,106 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Global Helpers
+    function isSignedIn() { return request.auth != null; }
+    function isVerified() { return isSignedIn() && (request.auth.token.email_verified == true || request.auth.token.firebase.sign_in_provider == 'google.com'); }
+    function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    
+    // Schema Validations
+    function isValidUser(data) {
+      return data.uid == request.auth.uid &&
+             data.email is string && data.email.size() <= 256 &&
+             data.role in ['builder', 'supplier', 'contractor', 'worker', 'real-estate-dealer', 'project-provider'] &&
+             (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 128));
+    }
+
+    function isValidProject(data) {
+      return data.title is string && data.title.size() <= 256 &&
+             data.ownerId == request.auth.uid &&
+             data.status in ['planning', 'tendering', 'active', 'completed', 'cancelled'] &&
+             (!('budget' in data) || data.budget is number);
+    }
+
+    function isValidMaterial(data) {
+      return data.name is string && data.name.size() <= 256 &&
+             data.category in ['Cement', 'Steel', 'Bricks', 'Sand', 'Machinery', 'Paint', 'Others'] &&
+             data.supplierId == request.auth.uid &&
+             data.price is number && data.price >= 0;
+    }
+
+    function isValidJob(data) {
+      return data.title is string && data.title.size() <= 256 &&
+             data.employerId == request.auth.uid &&
+             data.status in ['open', 'filled', 'closed'] &&
+             (!('salary' in data) || data.salary is number);
+    }
+
+    function isValidProperty(data) {
+      return data.title is string && data.title.size() <= 256 &&
+             data.type in ['buy', 'sell', 'rent'] &&
+             data.price is number && data.price >= 0 &&
+             data.ownerId == request.auth.uid;
+    }
+
+    // Collection: Users
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isVerified() && isValidId(userId) && userId == request.auth.uid && isValidUser(incoming());
+      allow update: if isVerified() && userId == request.auth.uid && isValidUser(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'bio', 'skills', 'rating']);
+    }
+
+    // Collection: Projects
+    match /projects/{projectId} {
+      allow read: if isSignedIn();
+      allow create: if isVerified() && isValidId(projectId) && isValidProject(incoming());
+      allow update: if isVerified() && isOwner(existing().ownerId) && isValidProject(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'description', 'contractorId', 'status', 'location', 'budget', 'completedAt']);
+      allow delete: if isVerified() && isOwner(existing().ownerId);
+    }
+
+    // Collection: Materials
+    match /materials/{materialId} {
+      allow read: if isSignedIn();
+      allow create: if isVerified() && isValidId(materialId) && isValidMaterial(incoming());
+      allow update: if isVerified() && isOwner(existing().supplierId) && isValidMaterial(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'category', 'price', 'unit', 'stock', 'description', 'image', 'rating']);
+      allow delete: if isVerified() && isOwner(existing().supplierId);
+    }
+
+    // Collection: Jobs
+    match /jobs/{jobId} {
+      allow read: if isSignedIn();
+      allow create: if isVerified() && isValidId(jobId) && isValidJob(incoming());
+      allow update: if isVerified() && isOwner(existing().employerId) && isValidJob(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'description', 'status', 'location', 'salary', 'salaryType']);
+      allow delete: if isVerified() && isOwner(existing().employerId);
+    }
+
+    // Collection: Properties
+    match /properties/{propertyId} {
+      allow read: if isSignedIn();
+      allow create: if isVerified() && isValidId(propertyId) && isValidProperty(incoming());
+      allow update: if isVerified() && isOwner(existing().ownerId) && isValidProperty(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'type', 'category', 'price', 'location', 'description', 'images', 'featured']);
+      allow delete: if isVerified() && isOwner(existing().ownerId);
+    }
+
+    // Collection: Chats
+    match /chats/{chatId} {
+      allow read: if isSignedIn() && request.auth.uid in resource.data.participants;
+      allow create: if isVerified() && isValidId(chatId) && request.auth.uid in incoming().participants;
+      allow update: if isVerified() && request.auth.uid in existing().participants && incoming().diff(existing()).affectedKeys().hasOnly(['lastMessage', 'updatedAt']);
+    }
+
+    match /chats/{chatId}/messages/{messageId} {
+      allow read: if isSignedIn() && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+      allow create: if isVerified() && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants && incoming().senderId == request.auth.uid;
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["builder", "supplier", "contractor", "worker", "real-estate-dealer", "project-provider"] },
+        "photoURL": { "type": "string" },
+        "bio": { "type": "string" },
+        "skills": { "type": "array" },
+        "rating": { "type": "number" },
+        "verified": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "A construction project",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "contractorId": { "type": "string" },
+        "type": { "type": "string" },
+        "status": { "type": "string", "enum": ["planning", "tendering", "active", "completed", "cancelled"] },
+        "location": { "type": "string" },
+        "budget": { "type": "number" },
+        "startedAt": { "type": "string", "format": "date-time" },
+        "completedAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "ownerId", "status"]
+    },
+    "Material": {
+      "title": "Material",
+      "description": "Construction material for sale",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "type": "string", "enum": ["Cement", "Steel", "Bricks", "Sand", "Machinery", "Paint", "Others"] },
+        "supplierId": { "type": "string" },
+        "price": { "type": "number" },
+        "unit": { "type": "string" },
+        "stock": { "type": "number" },
+        "description": { "type": "string" },
+        "image": { "type": "string" },
+        "rating": { "type": "number" }
+      },
+      "required": ["name", "category", "supplierId", "price"]
+    },
+    "Job": {
+      "title": "Job",
+      "description": "A labor job posting",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "employerId": { "type": "string" },
+        "type": { "type": "string" },
+        "location": { "type": "string" },
+        "salary": { "type": "number" },
+        "salaryType": { "type": "string", "enum": ["daily", "monthly", "fixed"] },
+        "status": { "type": "string", "enum": ["open", "filled", "closed"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "employerId", "status"]
+    },
+    "Property": {
+      "title": "Property",
+      "description": "Real estate property",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "type": { "type": "string", "enum": ["buy", "sell", "rent"] },
+        "category": { "type": "string", "enum": ["Residential", "Commercial", "Industrial", "Land"] },
+        "price": { "type": "number" },
+        "location": { "type": "string" },
+        "description": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "images": { "type": "array" },
+        "featured": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "type", "price", "ownerId"]
+    },
+    "Chat": {
+      "title": "Chat",
+      "description": "A conversation between users",
+      "type": "object",
+      "properties": {
+        "participants": { "type": "array" },
+        "lastMessage": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Message": {
+      "title": "Message",
+      "description": "A single message in a chat",
+      "type": "object",
+      "properties": {
+        "senderId": { "type": "string" },
+        "text": { "type": "string" },
+        "type": { "type": "string", "enum": ["text", "file", "image"] },
+        "fileUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile collection"
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Construction projects"
+    },
+    "/materials/{materialId}": {
+      "schema": "Material",
+      "description": "Material marketplace"
+    },
+    "/jobs/{jobId}": {
+      "schema": "Job",
+      "description": "Job portal postings"
+    },
+    "/properties/{propertyId}": {
+      "schema": "Property",
+      "description": "Real estate listings"
+    },
+    "/chats/{chatId}": {
+      "schema": "Chat",
+      "description": "Conversations"
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Messages within a chat"
+    }
+  }
+}
