@@ -17,12 +17,19 @@ import {
 } from 'lucide-react';
 
 const categories = [
-  { name: 'All', icon: <Layers size={18} /> },
-  { name: 'Cement', icon: <Package size={18} /> },
-  { name: 'Steel', icon: <Hammer size={18} /> },
-  { name: 'Bricks', icon: <Construction size={18} /> },
-  { name: 'Machinery', icon: <Truck size={18} /> },
-  { name: 'Paint', icon: <Pipette size={18} /> },
+  { name: 'All', icon: <Layers size={18} />, count: '4,200+' },
+  { name: 'Cement', icon: <Package size={18} />, count: '850' },
+  { name: 'Steel', icon: <Hammer size={18} />, count: '1,200' },
+  { name: 'Bricks', icon: <Construction size={18} />, count: '2,100' },
+  { name: 'Machinery', icon: <Truck size={18} />, count: '150' },
+  { name: 'Paint', icon: <Pipette size={18} />, count: '900' },
+];
+
+const priceTickers = [
+  { material: 'Steel (TMT)', price: '$650', change: '+2.4%', trend: 'up' },
+  { material: 'Cement (OPC)', price: '$4.50', change: '-0.8%', trend: 'down' },
+  { material: 'River Sand', price: '$120', change: '0.0%', trend: 'stable' },
+  { material: 'Red Bricks', price: '$0.08', change: '+1.2%', trend: 'up' },
 ];
 
 const mockMaterials = [
@@ -44,106 +51,158 @@ export default function Marketplace() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto p-6 md:p-10 space-y-10">
-      {/* Header & Search */}
-      <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-8 glass-card p-10 rounded-[56px] relative overflow-hidden shadow-2xl shadow-[#0A4D8C]/5">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#42A5F5]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-        <div className="relative z-10 space-y-2">
-          <div className="flex items-center gap-3 mb-2">
-             <div className="w-1.5 h-6 bg-[#42A5F5] rounded-full"></div>
-             <h1 className="text-4xl font-extrabold text-[#0A4D8C] tracking-tight">Marketplace</h1>
-          </div>
-          <p className="text-gray-500 font-bold text-sm tracking-tight uppercase opacity-70">Bulk Procurement Engine v4.0</p>
+    <div className="space-y-12 pb-20">
+      {/* Dynamic Price Ticker */}
+      <div className="flex bg-[#0A4D8C] h-14 items-center overflow-hidden whitespace-nowrap rounded-[20px] shadow-premium mb-8">
+        <div className="bg-[#42A5F5] h-full px-6 flex items-center gap-2 font-black text-[10px] text-[#0A4D8C] uppercase tracking-widest shrink-0 z-10">
+           <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="16" 
+            height="16" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          >
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+            <polyline points="17 6 23 6 23 12" />
+          </svg>
+           Live Index
         </div>
-        
-        <div className="relative z-10 flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-          <div className="relative w-full sm:w-[450px]">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400" size={24} />
-            <input 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Source materials, machinery, tenders..."
-              className="w-full bg-[#F5F7FA] border-none rounded-[32px] py-6 pl-16 pr-8 text-lg font-medium shadow-inner focus:ring-4 focus:ring-[#42A5F5]/20 focus:bg-white transition-all"
-            />
+        <div className="flex gap-12 px-8 animate-infinite-scroll">
+          {[...priceTickers, ...priceTickers].map((tick, i) => (
+            <div key={i} className="flex items-center gap-4 text-white/90 text-xs font-bold font-mono">
+              <span>{tick.material}:</span>
+              <span className="text-[#42A5F5]">{tick.price}</span>
+              <span className={tick.trend === 'up' ? 'text-emerald-400' : tick.trend === 'down' ? 'text-rose-400' : 'text-gray-400'}>
+                {tick.change}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Hero Search Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 glass-card p-12 rounded-[56px] relative overflow-hidden flex flex-col justify-center min-h-[320px]">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#42A5F5]/5 rounded-full blur-[100px] translate-x-1/2 -translate-y-1/2" />
+          <div className="relative z-10">
+             <div className="flex items-center gap-3 mb-6">
+                <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-emerald-100">Market Verified</span>
+             </div>
+             <h1 className="text-4xl md:text-5xl font-black text-[#0A4D8C] mb-8 font-display tracking-tight leading-[1.1]">
+               Source Materials at <br /> <span className="text-[#42A5F5]">Manufacturer Rates.</span>
+             </h1>
+             <div className="relative max-w-xl group">
+                <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#1565C0] transition-colors" size={24} />
+                <input 
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Query global inventory..." 
+                  className="w-full bg-white/50 border border-transparent rounded-[24px] py-6 pl-16 pr-8 text-lg font-medium outline-none focus:bg-white focus:border-[#42A5F5]/30 focus:ring-8 focus:ring-[#42A5F5]/5 transition-all shadow-inner"
+                />
+             </div>
           </div>
-          <button className="bg-[#0A4D8C] text-white h-full px-10 py-6 rounded-[32px] font-bold hover:bg-[#1565C0] shadow-2xl shadow-[#0A4D8C]/20 transition-all flex items-center justify-center gap-3 active:scale-95">
-            <Plus size={24} />
-            <span className="hidden sm:inline">Post Inventory</span>
-          </button>
+        </div>
+
+        <div className="bg-[#0A4D8C] p-12 rounded-[56px] text-white flex flex-col justify-between shadow-premium relative overflow-hidden group">
+           <div className="absolute -top-12 -right-12 w-48 h-48 bg-white/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000" />
+           <div className="relative z-10">
+              <ShoppingCart size={40} className="text-[#42A5F5] mb-8" />
+              <h3 className="text-2xl font-black mb-4 font-display">Bulk Procurement</h3>
+              <p className="text-blue-100/70 font-medium leading-relaxed text-sm mb-10">
+                Automated tender system for large-scale orders with guaranteed delivery schedules.
+              </p>
+           </div>
+           <button className="bg-white text-[#0A4D8C] w-full py-5 rounded-[24px] font-black text-[10px] uppercase tracking-[0.2em] hover:bg-[#42A5F5] hover:text-white transition-all">
+              Initialize RFQ
+           </button>
         </div>
       </div>
 
       {/* Categories Bar */}
-      <div className="flex items-center gap-4 overflow-x-auto pb-6 no-scrollbar">
+      <div className="flex items-center gap-6 overflow-x-auto pb-4 no-scrollbar">
         {categories.map((cat) => (
           <button
             key={cat.name}
             onClick={() => setSelectedCategory(cat.name)}
-            className={`flex items-center gap-3 px-8 py-4 rounded-[28px] font-bold whitespace-nowrap transition-all border-2 text-sm shadow-sm ${
+            className={`flex items-center gap-4 px-10 py-5 rounded-[32px] font-black whitespace-nowrap transition-all border-2 text-[10px] uppercase tracking-widest ${
               selectedCategory === cat.name 
-              ? 'bg-[#0A4D8C] text-white border-[#0A4D8C] shadow-xl shadow-[#0A4D8C]/20 scale-105' 
-              : 'bg-white text-gray-500 border-white hover:border-[#42A5F5]/30'
+              ? 'bg-[#0A4D8C] text-white border-[#0A4D8C] shadow-premium scale-105' 
+              : 'bg-white/40 text-gray-400 border-white hover:border-[#42A5F5]/30 hover:text-gray-600'
             }`}
           >
-            {cat.icon}
+            <span className={selectedCategory === cat.name ? 'text-[#42A5F5]' : 'text-gray-300'}>{cat.icon}</span>
             {cat.name}
+            <span className={`ml-2 font-mono ${selectedCategory === cat.name ? 'text-white/40' : 'text-gray-300'}`}>[{cat.count}]</span>
           </button>
         ))}
       </div>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
         {filtered.map((item) => (
           <motion.div
             key={item.id}
             layout
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            whileHover={{ y: -10 }}
-            className="group glass-card rounded-[48px] overflow-hidden border border-gray-50 shadow-sm hover:shadow-[0_20px_60px_-15px_rgba(10,77,140,0.15)] transition-all duration-500"
+            whileHover={{ y: -12 }}
+            className="group glass-card rounded-[48px] overflow-hidden border border-white/50 shadow-premium transition-all duration-500 bg-white/20"
           >
-            <div className="relative aspect-square overflow-hidden">
+            <div className="relative aspect-[4/3] overflow-hidden">
               <img 
                 src={item.image} 
                 alt={item.name} 
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
               />
-              <div className="absolute top-6 left-6 glass-card px-4 py-2 rounded-2xl text-[10px] font-bold text-[#0A4D8C] uppercase tracking-[0.2em] flex items-center gap-2 shadow-xl">
-                 <CheckCircle size={14} className="text-emerald-500" />
-                 Verified Dist.
+              <div className="absolute top-6 left-6 flex flex-col gap-2">
+                 <div className="glass-card px-4 py-2 rounded-2xl text-[9px] font-black text-[#0A4D8C] uppercase tracking-[0.2em] flex items-center gap-2 shadow-2xl border-white/40">
+                    <CheckCircle size={14} className="text-emerald-500" />
+                    Verified
+                 </div>
               </div>
-              <button className="absolute bottom-6 right-6 bg-white text-[#0A4D8C] p-4 rounded-3xl hover:bg-[#1565C0] hover:text-white transition-all shadow-2xl active:scale-90 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 duration-300">
-                <ShoppingCart size={24} />
-              </button>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A4D8C]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
             
-            <div className="p-8">
-              <div className="text-[10px] font-bold text-[#42A5F5] uppercase tracking-[0.3em] mb-3">{item.category}</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2 truncate group-hover:text-[#0A4D8C] transition-colors">{item.name}</h3>
-              
-              <div className="flex items-center gap-3 mb-6">
-                <div className="flex items-center gap-1 text-amber-500">
-                  <Star size={16} fill="currentColor" />
-                  <span className="text-gray-900 font-bold ml-1">{item.rating}</span>
-                </div>
-                <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
-                <span className="text-gray-400 font-bold text-[10px] uppercase tracking-widest">{item.reviews} reviews</span>
+            <div className="p-10">
+              <div className="flex justify-between items-start mb-6">
+                 <div>
+                    <div className="text-[10px] font-black text-[#42A5F5] uppercase tracking-[0.3em] mb-2">{item.category}</div>
+                    <h3 className="text-xl font-black text-gray-900 group-hover:text-[#0A4D8C] transition-colors leading-tight">{item.name}</h3>
+                 </div>
+                 <button className="bg-gray-50 text-gray-400 p-4 rounded-2xl hover:bg-[#0A4D8C] hover:text-white transition-all shadow-sm">
+                   <ShoppingCart size={20} />
+                 </button>
               </div>
               
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-8 flex items-center gap-2">
-                 <Truck size={14} className="text-[#42A5F5]" />
-                 {item.supplier}
-              </p>
+              <div className="flex items-center gap-4 mb-8">
+                <div className="flex items-center gap-1 text-amber-500">
+                  <Star size={14} fill="currentColor" />
+                  <span className="text-xs font-black text-gray-900">{item.rating}</span>
+                </div>
+                <div className="h-1 w-1 bg-gray-300 rounded-full" />
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest truncate">{item.supplier}</p>
+              </div>
               
-              <div className="flex justify-between items-end border-t border-gray-50 pt-8">
-                <div>
-                  <div className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mb-1">Unit Rate</div>
-                  <div className="text-3xl font-black text-[#0A4D8C]">
-                    ${item.price.toLocaleString()}
-                    <span className="text-xs text-gray-400 font-bold lowercase ml-2 pr-2">/{item.unit}</span>
+              <div className="flex flex-col gap-6 pt-10 border-t border-gray-100">
+                <div className="flex justify-between items-end">
+                  <div>
+                    <div className="text-[9px] text-gray-400 font-black uppercase tracking-[0.2em] mb-1">Index Price</div>
+                    <div className="text-3xl font-black text-[#0A4D8C] tracking-tight">
+                      ${item.price.toLocaleString()}
+                      <span className="text-[10px] text-gray-400 font-black uppercase tracking-widest ml-2">/{item.unit}</span>
+                    </div>
+                  </div>
+                  <div className="h-10 w-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                     <TrendingUpModern size={18} />
                   </div>
                 </div>
-                <ChevronRight className="text-gray-300 group-hover:text-[#42A5F5] group-hover:translate-x-2 transition-all" size={28} />
+                <button className="w-full bg-[#F5F7FA] text-[#0A4D8C] py-5 rounded-[24px] font-black text-[10px] uppercase tracking-[0.22em] hover:bg-[#0A4D8C] hover:text-white transition-all">
+                  Procurement Details
+                </button>
               </div>
             </div>
           </motion.div>
@@ -151,11 +210,33 @@ export default function Marketplace() {
       </div>
 
       {filtered.length === 0 && (
-        <div className="flex flex-col items-center justify-center p-20 bg-white rounded-[40px] border border-gray-100 italic text-gray-400">
-          <Layers size={48} className="mb-4 opacity-20" />
-          No items found in this category.
+        <div className="flex flex-col items-center justify-center p-32 bg-white/40 rounded-[56px] border-2 border-dashed border-gray-100 text-center">
+          <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center text-gray-200 mb-8">
+            <Layers size={40} />
+          </div>
+          <h3 className="text-2xl font-black text-[#0A4D8C] font-display mb-2">Null Inventory State</h3>
+          <p className="text-gray-400 font-medium">No assets matching the current query parameters were discovered.</p>
         </div>
       )}
     </div>
+  );
+}
+
+function TrendingUpModern({ size }: { size: number }) {
+  return (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      width={size} 
+      height={size} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    >
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+      <polyline points="17 6 23 6 23 12" />
+    </svg>
   );
 }
