@@ -1,20 +1,62 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🏗️ Helping Hands – Construction Management Platform
 
-# Run and deploy your AI Studio app
+### Smart Construction • Workforce • Materials • Real Estate • Project Collaboration
 
-This contains everything you need to run your app locally.
+---
 
-View your app in AI Studio: https://ai.studio/apps/55c747e9-a70f-4d44-95fa-819993a643da
+# 📌 About the Project
 
-## Run Locally
+Helping Hands is an all-in-one construction ecosystem platform designed to connect:
 
-**Prerequisites:**  Node.js
+- 👷 Contractors & Builders  
+- 🏢 Material Suppliers  
+- 🏠 Property Buyers & Sellers  
+- 💼 Job Seekers & Workers  
+- 📋 Project Owners & Investors  
 
+The platform simplifies project management, labor hiring, material purchasing, communication, and real-estate collaboration within a single digital system.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+---
+
+# ✨ Key Features
+
+- 🔐 User Authentication & Role Selection
+- 🏗️ Builder & Contractor Dashboard
+- 🧱 Material Supplier Marketplace
+- 👷 Labor/Worker Hiring System
+- 🏠 Buy & Sell Property Section
+- 📁 Project Posting & Management
+- 💬 Real-Time Communication
+- 📊 Construction Progress Tracking
+- 🤖 AI-Powered Smart Assistance
+- 📱 Responsive Modern UI
+
+---
+
+# ⚙️ Tech Stack
+
+- **Frontend:** React / Next.js
+- **Backend:** Node.js
+- **Database:** Firebase / MongoDB
+- **AI Integration:** Gemini API
+- **Styling:** Tailwind CSS
+
+---
+
+# 🚀 Run the Project Locally
+
+## Prerequisites
+
+Make sure you have installed:
+
+- Node.js
+- npm
+
+---
+
+## Installation Steps
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone <your-repository-link>
