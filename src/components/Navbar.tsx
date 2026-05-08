@@ -8,12 +8,6 @@ export default function Navbar() {
   const { user, profile, signOut } = useAuth();
   const [isSideDrawerOpen, setIsSideDrawerOpen] = useState(false);
 
-  const landingNavLinks = [
-    { name: 'Solutions', path: '/' },
-    { name: 'Marketplace', path: '/marketplace' },
-    { name: 'Jobs', path: '/jobs' },
-    { name: 'AI Ecosystem', path: '/assistant' },
-  ];
 
   return (
     <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl">
@@ -25,18 +19,6 @@ export default function Navbar() {
           <span className="font-bold text-2xl tracking-tighter text-[#0A4D8C] hidden sm:block">Helping Hands</span>
         </Link>
 
-        {/* Center Nav */}
-        <div className="hidden lg:flex items-center gap-10">
-          {landingNavLinks.map((link) => (
-            <Link 
-              key={link.name} 
-              to={link.path} 
-              className="text-sm font-bold text-gray-500 hover:text-[#0A4D8C] transition-colors tracking-tight"
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
 
         {/* Right Actions */}
         <div className="flex items-center gap-6">
@@ -119,18 +101,6 @@ export default function Navbar() {
                 </button>
               </div>
 
-              <div className="space-y-4">
-                {landingNavLinks.map((link) => (
-                  <Link 
-                    key={link.name} 
-                    to={link.path} 
-                    onClick={() => setIsSideDrawerOpen(false)}
-                    className="block text-2xl font-black text-[#0A4D8C] hover:text-[#42A5F5] transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
 
               <div className="mt-auto py-8 border-t border-gray-100">
                 <Link to="/login" onClick={() => setIsSideDrawerOpen(false)} className="w-full flex items-center justify-center p-4 bg-[#0A4D8C] text-white rounded-2xl font-bold">

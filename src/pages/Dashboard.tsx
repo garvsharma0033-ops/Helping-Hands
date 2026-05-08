@@ -8,12 +8,14 @@ import {
   Clock, 
   DollarSign, 
   CheckCircle2, 
+  Briefcase,
   AlertTriangle,
   ChevronRight,
   Newspaper,
   LocateFixed,
   Building, 
-  BrainCircuit
+  BrainCircuit,
+  ArrowRight
 } from 'lucide-react';
 import { 
   AreaChart, 
