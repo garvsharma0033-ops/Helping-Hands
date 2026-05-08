@@ -37,7 +37,6 @@ function AppRoutes() {
   return (
     <Router>
       <div className="min-h-screen bg-[#F5F7FA] font-sans">
-        {isLandingOrLogin && <Navbar />}
         <AnimatePresence mode="wait">
           <Routes>
             <Route path="/" element={<LandingPage />} />
